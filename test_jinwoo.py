@@ -1,1 +1,1 @@
-print('hellokkyyyyyyyyyyyyyyyykk')
+print('hellokkyuuuuuuuuuuk')
