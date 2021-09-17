@@ -26,9 +26,3 @@ class Genome():
         pass
 
     pass
-
-
-
-if __name__ == '__main__':
-    test = (1, 0)
-    print(test[0])
