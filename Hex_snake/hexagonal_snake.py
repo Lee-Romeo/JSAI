@@ -19,7 +19,7 @@ Axial = namedtuple('Axial', ['q', 'r'])
 class Game:
     def __init__(self):
         #경로 설정
-        self.PATH =''
+        self.PATH ='D:\\PEA\\program\\JSAI\\'
 
         # 기본 상수 설정
         self.cell_num = 10 # 육각격자 한 변에 cell이 몇개 들어가는지
@@ -46,7 +46,8 @@ class Game:
         pygame.display.set_caption("HEXAGONAL_SNAKE")
 
         # icon 설정
-        gameicon = pygame.image.load(r'icon.png')
+        path = self.PATH + 'Hex_snake\\icon.png'
+        gameicon = pygame.image.load(path)
         pygame.display.set_icon(gameicon)
 
         # FPS
