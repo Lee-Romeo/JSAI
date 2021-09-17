@@ -4,27 +4,16 @@ from enum import Enum
 from collections import namedtuple
 # 육각 격자에 대한 수학적 설명 : https://www.redblobgames.com/grids/hexagons/
 # 오리지널 snakegame 코드 참고 : https://github.com/python-engineer/snake-ai-pytorch/blob/main/snake_game_human.py
-
-class Direction(Enum):
-    # (dq, dr)
-    one = (1, 0) # 0 rad
-    two = (1, -1) # pi/3 rad
-    three = (0, -1) # pi*2/3 rad
-    four = (-1, 0) # pi rad
-    five = (-1, 1) # pi*4/3 rad
-    six = (0, 1) # pi*5/3 rad
-
-Axial = namedtuple('Axial', ['q', 'r'])
-
 class Game:
     def __init__(self):
+        #Axial
+        self.Axial = namedtuple('Axial', ['q', 'r'])
         #경로 설정
         self.PATH ='D:\\PEA\\program\\JSAI\\'
-
         # 기본 상수 설정
         self.cell_num = 10 # 육각격자 한 변에 cell이 몇개 들어가는지
         self.onecellsize = 20 # 육각cell 한변 길이(px)
-
+        #색 설정
         self.backgroundcolor = (44, 45, 45)
         self.gridcolor = (160, 165, 167)
         self.foodcolor = (197, 57, 10)
@@ -32,41 +21,45 @@ class Game:
         self.bodycolor = (191, 218, 139)
         self.centercolor = (243, 250, 157)
         self.textcolor = (253, 100, 67)
-
         self.gridthick = 3
-        self.speed = 4 # frames per second
+        #방향 설정
+        self.one = (1, 0)
+        self.two = (1, -1)
+        self.three = (0, -1)
+        self.four = (-1, 0)
+        self.five = (-1, 1)
+        self.six = (0, 0)
+        #FPS
+        self.speed = 4
+        #폰트
         self.font = pygame.font.SysFont('arial', 25)
-
         # 화면 크기 설정
         self.screen_width = int((np.sqrt(3)*self.onecellsize) * (self.cell_num * 2 - 1) + 100)
         self.screen_height = int((self.onecellsize) * (3*self.cell_num-1) + 100)
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-
         # 화면 타이틀 설정
         pygame.display.set_caption("HEXAGONAL_SNAKE")
-
         # icon 설정
         path = self.PATH + 'Hex_snake\\icon.png'
         gameicon = pygame.image.load(path)
         pygame.display.set_icon(gameicon)
-
-        # FPS
+        # 시간
         self.clock = pygame.time.Clock()
-
         # 뱀 상태 초기화
-        self.direction = Direction.one
-        self.head = Axial(0, 0)
-        self.snake = [self.head, Axial(self.head.q-1, self.head.r), Axial(self.head.q-2, self.head.r)]
+        self.direction = self.one
+        self.head = self.Axial(0, 0)
+        self.snake = [self.head, self.Axial(self.head.q-1, self.head.r), self.Axial(self.head.q-2, self.head.r)]
         self.score = 0
         self.food = None
         self._place_food()
-    
+        
+
     def _place_food(self):
         '''육각격자 내 임의의 점에 food 생성함.'''
         while True:
             q = np.random.randint(-(self.cell_num-1), self.cell_num)
             r = np.random.randint(-(self.cell_num-1), self.cell_num)
-            self.food = Axial(q, r)
+            self.food = self.Axial(q, r)
             if (-(self.cell_num-1) <= q+r <= self.cell_num-1) and not (self.food in self.snake): # 육각 격자에 해당되고, 뱀 위치와 곂치지 않을때
                 break
 
@@ -130,9 +123,8 @@ class Game:
     
     def _is_collision(self):
         # 경계면에 닿은 경우
-        if self._hex_distance(self.head, Axial(0, 0)) >= self.cell_num:
+        if self._hex_distance(self.head, self.Axial(0, 0)) >= self.cell_num:
             return True
-        
         # 자기 자신과 부딪친 경우
         if self.head in self.snake[1:]:
             return True
@@ -149,20 +141,20 @@ class Game:
             # 방향 바꾸기
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
-                    self.direction = Direction.one
+                    self.direction = self.one
                 if event.key == pygame.K_2:
-                    self.direction = Direction.two
+                    self.direction = self.two
                 if event.key == pygame.K_3:
-                    self.direction = Direction.three
+                    self.direction = self.three
                 if event.key == pygame.K_4:
-                    self.direction = Direction.four
+                    self.direction = self.four
                 if event.key == pygame.K_5:
-                    self.direction = Direction.five
+                    self.direction = self.five
                 if event.key == pygame.K_6:
-                    self.direction = Direction.six
+                    self.direction = self.six
 
         # 뱀 머리 위치 업데이트
-        self.head = Axial(self.head.q + self.direction.value[0], self.head.r + self.direction.value[1])
+        self.head = self.Axial(self.head.q + self.direction[0], self.head.r + self.direction[1])
         self.snake.insert(0, self.head)
 
         # 게임 종료 체크
